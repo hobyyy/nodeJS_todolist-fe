@@ -1,12 +1,15 @@
 import axios from "axios";
 
+console.log('Backend URL:', process.env.REACT_APP_BACKEND_URL);
+
 const api = axios.create({
-  baseURL: `${process.env.REACT_APP_BACKEND_URL}/api`,
+  baseURL: `${process.env.REACT_APP_BACKEND_URL || "http://localhost:5500"}/api`,
   headers: {
     "Content-Type": "application/json",
     authorization: "Bearer " + localStorage.getItem("token"),
   },
 });
+
 /**
  * console.log all requests and responses
  */
