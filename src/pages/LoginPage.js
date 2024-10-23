@@ -14,17 +14,25 @@ const LoginPage = ({user, setUser}) => {
   const handleLogin = async(event) => {
     event.preventDefault();
     try {
+      if(!email){
+        throw new Error("이메일을 입력하세요.")
+      }else if(!password){
+        throw new Error("패스워드를 입력하세요.")
+      }
       const response = await api.post('./user/login', {email,password})
       if(response.status === 200) {
         setUser(response.data.user)
         sessionStorage.setItem("token", response.data.token)
         api.defaults.headers['authorization'] = "Bearer " + response.data.token;
+        alert(`${response.data?.user._doc.name||'회원'}님 환영합니다.`);
         setError('');
         navigate('/');
+      }else {
+        throw new Error(response.message || '로그인 실패');
       }
-      throw new Error(response.message);
     }catch(error) {
       setError(error.message)
+      alert(error.message); // 팝업 창으로 오류 메시지 표시
     }
   }
   if(user) {
@@ -32,7 +40,8 @@ const LoginPage = ({user, setUser}) => {
   }
   return (
     <div className="display-center">
-      {error && <div className="red-error">{error}</div>}
+      {/* 아래코드 팝업으로 변경 */}
+      {/* {error && <div className="red-error">{error}</div>} */}
       <Form className="login-box" onSubmit={handleLogin}>
         <h1>로그인</h1>
         <Form.Group className="mb-3" controlId="formBasicEmail">

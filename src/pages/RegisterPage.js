@@ -13,25 +13,36 @@ const RegisterPage = () => {
   const handleSubmit = async(event) => {
     try {
       event.preventDefault();
-      if(password !== secPassword) {  // 입력한 두개의 password가 일치하지 않으면
+      if(!name){
+        throw new Error("이름을 입력하세요.")
+      }else if(!email){
+        throw new Error("이메일을 입력하세요.")
+      }else if(!password){
+        throw new Error("패스워드를 입력하세요.")
+      }else if(password !== secPassword) {  // 입력한 두개의 password가 일치하지 않으면
         throw new Error("패스워드가 일치하지 않습니다. 다시 입력해주세요.")
       }
       console.log('info',name,email,password)
       const response = await api.post('/user',{name,email,password})
       console.log('response', response)
       if(response.status===200) {
+        alert(`회원가입이 완료되었습니다. ${name}님 환영합니다!`)
         navigate('/login');
-      }else {
-        throw new Error(response.data.error)
+      }else if (response.status === 409) { // 이미 가입한 이메일일 경우
+        throw new Error("이미 가입한 유저입니다.");
+      } else {
+        throw new Error(response.data.error);
       }
     }catch(error) {
       setError(error.message)
+      alert(error.message); // 팝업 창으로 오류 메시지 표시
     }
     
   }
   return (
     <div className="display-center">
-      {error && <div className="red-error">{error}</div>}
+      {/* 아래코드 팝업으로 변경 */}
+      {/* {error && <div className="red-error">{error}</div>} */}
       <Form className="login-box" onSubmit={handleSubmit}>
         <h1>회원가입</h1>
         <Form.Group className="mb-3" controlId="formName">
