@@ -11,12 +11,10 @@ const TodoPage = () => {
   const getTasks = async() => {
     try {
       const response = await api.get('/tasks')
-      console.log('API Response:', response); // 응답 구조 확인
-
       // response.data가 있다면 setTodoList로 상태 업데이트
       setTodoList(response?.data.data || []); // response.data가 없을 경우 빈 배열로 설정
     }catch(error) {
-      console.log('Error fetching tasks:', error)
+      console.error('Error fetching tasks:', error.response ? error.response.data : error.message);
     }
   }
 
@@ -28,9 +26,10 @@ const TodoPage = () => {
       }
 
       const response = await api.post('/tasks',{task: todoValue, isComplete: false});
+
       if(response.status===200) {// 일반적으로 생성 성공 시 201 반환
-        console.log('성공')
-        setTodoList([...todoList, response.data]); // 추가한 항목을 todoList에 업데이트
+        // console.log('성공')
+        setTodoList([...todoList, response.data.data]); // 추가한 항목을 todoList에 업데이트
         setTodoValue('')  // 입력 필드 초기화
         getTasks();
       }else {
@@ -54,7 +53,6 @@ const TodoPage = () => {
   }
 
   const reverseTask = async(taskID,nowValue) => {
-    console.log('taskID',taskID)
     try {
       const response = await api.put(`/tasks/${taskID}`, { isComplete: !nowValue });
       if(response.status===200) {
@@ -69,7 +67,7 @@ const TodoPage = () => {
   useEffect(() => {
     getTasks();
   },[])
-
+  
   return (
     <Container>
       <Row className="add-item-row">

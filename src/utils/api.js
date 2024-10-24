@@ -11,27 +11,29 @@ const api = axios.create({
   },
 });
 
-/**
- * console.log all requests and responses
- */
+// 요청 인터셉터 추가
 api.interceptors.request.use(
   (request) => {
-    console.log("Starting Request", request);
+    const token = sessionStorage.getItem("token"); // JWT 토큰 가져오기
+    if (token) {
+      request.headers["Authorization"] = `Bearer ${token}`; // Authorization 헤더에 추가
+    }
     return request;
   },
-  function (error) {
-    console.log("REQUEST ERROR", error);
+  (error) => {
+    console.log("REQUEST ERROR111", error);
+    return Promise.reject(error);
   }
 );
 
 api.interceptors.response.use(
   (response) => {
-    console.log("Response:", response);
     return response;
   },
   function (error) {
-    error = error.response.data;
-    console.log("RESPONSE ERROR", error);
+    console.error("RESPONSE ERROR222", error.response); // 전체 응답 객체 출력
+    error = error.response.data; // 오류 데이터 추출
+    console.log("Error Data:", error); // 오류 데이터도 출력
     return Promise.reject(error);
   }
 );

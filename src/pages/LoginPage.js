@@ -35,6 +35,7 @@ const LoginPage = ({user, setUser}) => {
       alert(error.message); // 팝업 창으로 오류 메시지 표시
     }
   }
+
   if(user) {
     return <Navigate to='/'/>
   }

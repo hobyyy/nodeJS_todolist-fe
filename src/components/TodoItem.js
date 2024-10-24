@@ -7,9 +7,12 @@ const TodoItem = ({ item, onDelete, onComplete }) => {
     <Row>
       <Col xs={12}>
         <div className={`todo-item ${item.isComplete? 'item-complete' : ''}`}> 
-          <div className="todo-content">{item.task}</div>
+          <div className="todo-content">
+            <span>{item.task}</span>
+            <span>by {item?.author.name}</span>
+          </div>
 
-          <div>
+          <div className="todo-btn">
             <button className="button-delete" onClick={() => onDelete(item._id)}>삭제</button>
             <button className="button-delete" onClick={() => onComplete(item._id, item.isComplete)}>
               {item.isComplete? '되돌리기':'끝남'}

@@ -22,9 +22,7 @@ const RegisterPage = () => {
       }else if(password !== secPassword) {  // 입력한 두개의 password가 일치하지 않으면
         throw new Error("패스워드가 일치하지 않습니다. 다시 입력해주세요.")
       }
-      console.log('info',name,email,password)
       const response = await api.post('/user',{name,email,password})
-      console.log('response', response)
       if(response.status===200) {
         alert(`회원가입이 완료되었습니다. ${name}님 환영합니다!`)
         navigate('/login');
